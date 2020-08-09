@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using UserRepository.Models;
@@ -11,13 +9,10 @@ namespace UserRestService.Models
 {
     public class User
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserID { get; set; }
-        [EmailAddress]
         public string UserEmail { get; set; }
         public string UserPassWord { get; set; }
-        public DateTime CreatedDAte { get; private set; }
+        public DateTime CreatedDate { get; set; }
         private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
         private static IMapper mapper = config.CreateMapper();
         public static IEnumerable<User> GetAll()
@@ -34,5 +29,14 @@ namespace UserRestService.Models
         {
             return mapper.Map<UserDTO, User>(userDTO);
         }
-    }
+        private static UserDTO convertToUserDTO(User user)
+        {
+            return mapper.Map<User, UserDTO>(user);
+        }
+        public static async Task<int> Create(User user)
+        {
+            int id = await UserDTO.Create(convertToUserDTO(user));
+            return id;
+        }
+}
 }
