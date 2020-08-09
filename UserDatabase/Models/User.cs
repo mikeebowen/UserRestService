@@ -15,6 +15,7 @@ namespace UserDatabase.Models
         [EmailAddress]
         public string UserEmail { get; set; }
         public string UserPassWord { get; set; }
-        public DateTime CreatedDAte { get; private set; }
+        [Required, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime CreatedDate { get; set; }
     }
 }
