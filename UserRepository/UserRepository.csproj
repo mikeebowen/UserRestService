@@ -5,12 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UserDatabase\UserDatabase.csproj" />
-    <ProjectReference Include="..\UserRestService\UserRestService.csproj" />
   </ItemGroup>
 
 </Project>
