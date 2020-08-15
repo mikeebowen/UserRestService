@@ -10,8 +10,8 @@ using UserDatabase;
 namespace UserDatabase.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20200815195131_HashPasswords")]
-    partial class HashPasswords
+    [Migration("20200815200648_AddSalt")]
+    partial class AddSalt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,6 +30,10 @@ namespace UserDatabase.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Salt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("UserEmail")
                         .IsRequired()

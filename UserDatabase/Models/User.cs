@@ -11,7 +11,6 @@ namespace UserDatabase.Models
 {
     public class User
     {
-        byte[] salt;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserID { get; set; }
@@ -21,7 +20,7 @@ namespace UserDatabase.Models
         [Required]
         public string UserPassWord { get; set; }
         [Required]
-        private byte[] Salt { get; set; }
+        public byte[] Salt { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
     }
