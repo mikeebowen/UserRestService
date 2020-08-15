@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace UserDatabase.Models
 {
@@ -15,7 +13,7 @@ namespace UserDatabase.Models
         [EmailAddress]
         public string UserEmail { get; set; }
         public string UserPassWord { get; set; }
-        [Required, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
         public DateTime CreatedDate { get; set; }
     }
 }

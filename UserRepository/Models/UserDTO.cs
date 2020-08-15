@@ -41,7 +41,7 @@ namespace UserRepository.Models
             User user = mapper.Map<UserDTO, User>(userDTO);
             if (user.CreatedDate == null)
             {
-                user.CreatedDate = DateTime.Now;
+                user.CreatedDate = DateTime.UtcNow;
             }
             return user;
         }
