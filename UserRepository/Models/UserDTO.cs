@@ -31,7 +31,7 @@ namespace UserRepository.Models
                 {
                     rng.GetBytes(Salt);
                 }
-                password = hashPassword(value);
+                password = hashPassword(value, Salt);
             }
         }
         public byte[] Salt { get; set; }
@@ -71,20 +71,20 @@ namespace UserRepository.Models
             }
             return 0;
         }
-        public bool CheckPassword(string password, string userName)
+        public static bool CheckPassword(string password, string userName)
         {
-            var user = DatabaseManager.Instance.User.Where(u => u.UserEmail == userName);
+            var user = DatabaseManager.Instance.User.Where(u => u.UserEmail == userName).First();
             if (user == null)
             {
                 return false;
             }
-            return hashPassword(password) == UserPassWord;
+            return hashPassword(password, user.Salt) == user.UserPassWord;
         }
-        private string hashPassword(string pw)
+        private static string hashPassword(string pw, byte[] salt)
         {
             return Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: pw,
-            salt: Salt,
+            salt: salt,
             prf: KeyDerivationPrf.HMACSHA1,
             iterationCount: 10000,
             numBytesRequested: 256 / 8));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -15,11 +16,16 @@ namespace UserRestService.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private class PasswordObj
+        {
+            public string Password { get; set; }
+            public string UserEmail { get; set; }
+        }
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<UserRestService.Models.User> Get()
         {
-            return new string[] { "value1", "value2" };
+            return UserRestService.Models.User.GetAll();
         }
 
         // GET api/<UserController>/5
@@ -37,7 +43,12 @@ namespace UserRestService.Controllers
             int res = await UserDTO.Create(userDTO);
             return res;
         }
-
+        [HttpPost("check-password")]
+        public bool CheckPassword([FromBody] JObject jsonResult)
+        {
+            PasswordObj vals = JsonConvert.DeserializeObject<PasswordObj>(jsonResult.ToString());
+            return UserDTO.CheckPassword(vals.Password, vals.UserEmail);
+        }
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

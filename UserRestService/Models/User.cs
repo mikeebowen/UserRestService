@@ -11,7 +11,6 @@ namespace UserRestService.Models
     {
         public int UserID { get; set; }
         public string UserEmail { get; set; }
-        public string UserPassWord { get; set; }
         public DateTime CreatedDate { get; set; }
         private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
         private static IMapper mapper = config.CreateMapper();
@@ -38,5 +37,5 @@ namespace UserRestService.Models
             int id = await UserDTO.Create(convertToUserDTO(user));
             return id;
         }
-}
+    }
 }
