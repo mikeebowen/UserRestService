@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UserRepository.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,36 +22,47 @@ namespace UserRestService.Controllers
         }
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<UserRestService.Models.User> Get()
+        public IActionResult Get()
         {
-            return UserRestService.Models.User.GetAll();
+            return Ok(UserRestService.Models.User.GetAll());
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            return Ok(UserRestService.Models.User.GetUser(id));
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<int> Post([FromBody] JObject jsonResult)
+        public async Task<IActionResult> Post([FromBody] JObject jsonResult)
         {
-            UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(jsonResult.ToString());
-            int res = await UserDTO.Create(userDTO);
-            return res;
+            UserRestService.Models.User user = JsonConvert.DeserializeObject<UserRestService.Models.User>(jsonResult.ToString());
+            int res = await UserRestService.Models.User.Create(user);
+            return Ok(res);
         }
         [HttpPost("check-password")]
-        public bool CheckPassword([FromBody] JObject jsonResult)
+        public IActionResult CheckPassword([FromBody] JObject jsonResult)
         {
             PasswordObj vals = JsonConvert.DeserializeObject<PasswordObj>(jsonResult.ToString());
-            return UserDTO.CheckPassword(vals.Password, vals.UserEmail);
+            return Ok(UserRestService.Models.User.CheckPassword(vals.Password, vals.UserEmail));
         }
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put([FromBody] JObject jObject, string id)
         {
+            UserRestService.Models.User user = JsonConvert.DeserializeObject<UserRestService.Models.User>(jObject.ToString());
+            if (int.TryParse(id, out int intId))
+            {
+                user.UserID = intId;
+                UserRestService.Models.User.Update(user);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE api/<UserController>/5

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,14 @@ namespace UserRestService.Models
         {
             int id = await UserDTO.Create(convertToUserDTO(user));
             return id;
+        }
+        public static void Update(User user)
+        {
+            UserDTO.Update(convertToUserDTO(user));
+        }
+        public static bool CheckPassword(string password, string userEmail)
+        {
+            return UserDTO.CheckPassword(password, userEmail);
         }
     }
 }

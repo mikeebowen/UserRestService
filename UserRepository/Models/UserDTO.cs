@@ -36,8 +36,11 @@ namespace UserRepository.Models
         }
         public byte[] Salt { get; set; }
         public DateTime CreatedDate { get; private set; }
-        private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
+        //private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
+        private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap().ForAllMembers(opts => opts.Condition(c => c != null)));
+
         private static IMapper mapper = config.CreateMapper();
+
         public static List<UserDTO> GetAll()
         {
             List<User> users = DatabaseManager.Instance.User.ToListAsync().Result;
@@ -70,6 +73,11 @@ namespace UserRepository.Models
                 return user.Entity.UserID;
             }
             return 0;
+        }
+        public static void Update(UserDTO userDTO)
+        {
+            User user = DatabaseManager.Instance.User.Find(userDTO.UserID);
+            DatabaseManager.Instance.Entry(user).CurrentValues.SetValues(userDTO);
         }
         public static bool CheckPassword(string password, string userName)
         {
