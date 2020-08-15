@@ -2,7 +2,7 @@
 
 namespace UserDatabase.Migrations
 {
-    public partial class RemoveDatabaseGeneratedCreatedDate : Migration
+    public partial class HashPasswords : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

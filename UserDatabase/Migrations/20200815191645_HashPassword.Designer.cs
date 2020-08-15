@@ -10,8 +10,8 @@ using UserDatabase;
 namespace UserDatabase.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20200815174532_RemoveDatabaseGeneratedCreatedDate")]
-    partial class RemoveDatabaseGeneratedCreatedDate
+    [Migration("20200815191645_HashPassword")]
+    partial class HashPassword
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,9 +32,11 @@ namespace UserDatabase.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserEmail")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserPassWord")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserID");

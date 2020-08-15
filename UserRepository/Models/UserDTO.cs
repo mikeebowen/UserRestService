@@ -7,18 +7,34 @@ using System.Text;
 using System.Threading.Tasks;
 using UserDatabase.Models;
 using UserDatabase;
+using UserDatabase.Migrations;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
 
 namespace UserRepository.Models
 {
     public class UserDTO
     {
-        public UserDTO()
-        {
-            CreatedDate = DateTime.Now;
-        }
+        private string password;
         public int UserID { get; set; }
         public string UserEmail { get; set; }
-        public string UserPassWord { get; set; }
+        public string UserPassWord
+        {
+            get
+            {
+                return password;
+            }
+            set
+            {
+                Salt = new byte[128 / 8];
+                using (var rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(Salt);
+                }
+                password = hashPassword(value);
+            }
+        }
+        public byte[] Salt { get; set; }
         public DateTime CreatedDate { get; private set; }
         private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
         private static IMapper mapper = config.CreateMapper();
@@ -39,9 +55,9 @@ namespace UserRepository.Models
         private static User convertToUser(UserDTO userDTO)
         {
             User user = mapper.Map<UserDTO, User>(userDTO);
-            if (user.CreatedDate == null)
+            if (user.CreatedDate == DateTime.MinValue)
             {
-                user.CreatedDate = DateTime.UtcNow;
+                user.CreatedDate = DateTime.Now;
             }
             return user;
         }
@@ -54,6 +70,24 @@ namespace UserRepository.Models
                 return user.Entity.UserID;
             }
             return 0;
+        }
+        public bool CheckPassword(string password, string userName)
+        {
+            var user = DatabaseManager.Instance.User.Where(u => u.UserEmail == userName);
+            if (user == null)
+            {
+                return false;
+            }
+            return hashPassword(password) == UserPassWord;
+        }
+        private string hashPassword(string pw)
+        {
+            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            password: pw,
+            salt: Salt,
+            prf: KeyDerivationPrf.HMACSHA1,
+            iterationCount: 10000,
+            numBytesRequested: 256 / 8));
         }
     }
 }
