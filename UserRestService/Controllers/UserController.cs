@@ -38,8 +38,8 @@ namespace UserRestService.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] JObject jsonResult)
         {
-            UserRestService.Models.User user = JsonConvert.DeserializeObject<UserRestService.Models.User>(jsonResult.ToString());
-            int res = await UserRestService.Models.User.Create(user);
+            //UserRestService.Models.User user = JsonConvert.DeserializeObject<UserRestService.Models.User>(jsonResult.ToString());
+            int res = await UserRestService.Models.User.Create(jsonResult);
             return Ok(res);
         }
         [HttpPost("check-password")]

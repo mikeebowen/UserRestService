@@ -20,6 +20,12 @@ namespace UserDatabase
         {
             optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=cstructure_user_dev;Trusted_Connection=True;");
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<User>()
+                .HasIndex(u => u.UserEmail)
+                .IsUnique();
+        }
         public DbSet<User> User { get; set; }
     }
 }

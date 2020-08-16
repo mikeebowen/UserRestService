@@ -36,8 +36,8 @@ namespace UserRepository.Models
         }
         public byte[] Salt { get; set; }
         public DateTime CreatedDate { get; private set; }
-        //private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
-        private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap().ForAllMembers(opts => opts.Condition(c => c != null)));
+        private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
+        //private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap().ForAllMembers(opts => opts.Condition(c => c != null)));
 
         private static IMapper mapper = config.CreateMapper();
 

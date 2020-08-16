@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +35,10 @@ namespace UserRestService.Models
         {
             return mapper.Map<User, UserDTO>(user);
         }
-        public static async Task<int> Create(User user)
+        public static async Task<int> Create(JObject jObject)
         {
-            int id = await UserDTO.Create(convertToUserDTO(user));
+            UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(jObject.ToString());
+            int id = await UserDTO.Create(userDTO);
             return id;
         }
         public static void Update(User user)
