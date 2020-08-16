@@ -10,6 +10,7 @@ using UserDatabase;
 using UserDatabase.Migrations;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
+using System.Reflection;
 
 namespace UserRepository.Models
 {
@@ -37,7 +38,6 @@ namespace UserRepository.Models
         public byte[] Salt { get; set; }
         public DateTime CreatedDate { get; private set; }
         private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap());
-        //private static MapperConfiguration config = new MapperConfiguration(c => c.CreateMap<User, UserDTO>().ReverseMap().ForAllMembers(opts => opts.Condition(c => c != null)));
 
         private static IMapper mapper = config.CreateMapper();
 
@@ -74,10 +74,24 @@ namespace UserRepository.Models
             }
             return 0;
         }
-        public static void Update(UserDTO userDTO)
+        public static async void Update(UserDTO userDTO)
         {
             User user = DatabaseManager.Instance.User.Find(userDTO.UserID);
-            DatabaseManager.Instance.Entry(user).CurrentValues.SetValues(userDTO);
+            if (user != null)
+            {
+                //DatabaseManager.Instance.Entry(user).CurrentValues.SetValues(userDTO);
+                PropertyInfo[] props = typeof(UserDTO).GetProperties();
+                foreach (PropertyInfo prop in props)
+                {
+                    var val = prop.GetValue(userDTO);
+                    if (user.GetType().GetProperty(prop.Name) != null && prop.Name != "UserID" && prop.Name != "CreatedDate" && val != null)
+                    {
+                        PropertyInfo property = user.GetType().GetProperty(prop.Name);
+                        property.SetValue(user, val);
+                    }
+                }
+                await DatabaseManager.Instance.SaveChangesAsync();
+            }
         }
         public static bool CheckPassword(string password, string userName)
         {
