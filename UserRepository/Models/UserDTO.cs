@@ -93,6 +93,17 @@ namespace UserRepository.Models
                 await DatabaseManager.Instance.SaveChangesAsync();
             }
         }
+        public static async Task<bool> DeleteUser(int id)
+        {
+            User user = await DatabaseManager.Instance.User.FirstAsync(u => u.UserID == id);
+            if (user != null)
+            {
+                DatabaseManager.Instance.User.Remove(user);
+                await DatabaseManager.Instance.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
         public static bool CheckPassword(string password, string userName)
         {
             var user = DatabaseManager.Instance.User.Where(u => u.UserEmail == userName).First();

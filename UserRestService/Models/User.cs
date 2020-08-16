@@ -47,6 +47,14 @@ namespace UserRestService.Models
             userDTO.UserID = id;
             UserDTO.Update(userDTO);
         }
+        public static async Task<bool> DeleteUser(string id)
+        {
+            if (int.TryParse(id, out int intId))
+            {
+                return await UserDTO.DeleteUser(intId);
+            }
+            return false;
+        }
         public static bool CheckPassword(string password, string userEmail)
         {
             return UserDTO.CheckPassword(password, userEmail);

@@ -67,8 +67,10 @@ namespace UserRestService.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
+            var res = await UserRestService.Models.User.DeleteUser(id);
+            return Ok(res);
         }
     }
 }
