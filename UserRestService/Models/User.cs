@@ -41,9 +41,11 @@ namespace UserRestService.Models
             int id = await UserDTO.Create(userDTO);
             return id;
         }
-        public static void Update(User user)
+        public static void Update(JObject jObject, int id)
         {
-            UserDTO.Update(convertToUserDTO(user));
+            UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(jObject.ToString());
+            userDTO.UserID = id;
+            UserDTO.Update(userDTO);
         }
         public static bool CheckPassword(string password, string userEmail)
         {

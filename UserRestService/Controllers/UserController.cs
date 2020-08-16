@@ -52,11 +52,11 @@ namespace UserRestService.Controllers
         [HttpPut("{id}")]
         public IActionResult Put([FromBody] JObject jObject, string id)
         {
-            UserRestService.Models.User user = JsonConvert.DeserializeObject<UserRestService.Models.User>(jObject.ToString());
+            //UserRestService.Models.User user = JsonConvert.DeserializeObject<UserRestService.Models.User>(jObject.ToString());
             if (int.TryParse(id, out int intId))
             {
-                user.UserID = intId;
-                UserRestService.Models.User.Update(user);
+                //user.UserID = intId;
+                UserRestService.Models.User.Update(jObject, intId);
                 return Ok();
             }
             else
