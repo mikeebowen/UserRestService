@@ -18,7 +18,9 @@ namespace UserDatabase
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=cstructure_user_dev;Trusted_Connection=True;");
+            // TODO: get connection string from environment
+            string ctxStr = "Server=localhost\\SQLEXPRESS;Database=cstructure_user_dev;Trusted_Connection=True;";
+            optionsBuilder.UseSqlServer(ctxStr);
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
